@@ -155,22 +155,20 @@
 }
 .tuwen_detail .upload_box.data-v-521721a6 {
   position: relative;
-  width: 220rpx;
-  height: 220rpx;
+  width: 750rpx;
   background: #ffffff;
-  margin: 20rpx 10rpx;
-  margin-bottom: 100rpx;
+  margin: 20rpx 20rpx;
+  margin-bottom: 250rpx;
   display: -webkit-box;
   display: -webkit-flex;
   display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-          justify-content: center;
-  -webkit-box-align: center;
-  -webkit-align-items: center;
-          align-items: center;
+  -webkit-flex-wrap: wrap;
+          flex-wrap: wrap;
 }
 .tuwen_detail .upload_box .upload.data-v-521721a6 {
+  width: 220rpx;
+  height: 220rpx;
+  margin: 10rpx;
   font-size: 100rpx;
   font-family: PingFang SC;
   font-weight: bold;
@@ -179,13 +177,7 @@
 .tuwen_detail .upload_box image.data-v-521721a6 {
   width: 220rpx;
   height: 220rpx;
-}
-.tuwen_detail .upload_box .img2.data-v-521721a6 {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 220rpx;
-  height: 220rpx;
+  margin: 10rpx;
 }
 .tuwen_detail .tuwen_detail_get.data-v-521721a6 {
   position: fixed;

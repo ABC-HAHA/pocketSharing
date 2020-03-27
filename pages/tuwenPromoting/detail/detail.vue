@@ -30,10 +30,11 @@
 				<text>要求</text>
 				<view class="tuwen_detail_trans_content" v-if="detailData['esaClaimInfo']" v-html="detailData['esaClaimInfo']['claimComment']"></view>
 			</view>
+			<!-- up -->
 			<view class="upload_box" v-if="showUpload">
-				<view class="upload" v-if="checkValue" @tap="upload">+</view>
-				<image :src="upPic" mode="" v-if="!checkValue"></image>
-				<image class="img2" :src="upPicList" mode="" v-if="!checkValue"></image>
+				<view v-for="(item, index) in IMGLIST" :key="index"><image :src="item" mode="" v-if="!checkValue"></image></view>
+				<view v-for="(item, index) in upPicList" :key="index"><image :src="item.image" mode="" v-if="!checkValue"></image></view>
+				<view class="upload" @tap="upload" v-if="showAdd">+</view>
 			</view>
 			<!-- :type="flag ? 'primary' : 'default'" -->
 			<view :class="isLimit ? 'huise' : 'lanse'" class="tuwen_detail_get" @tap="getTask">
@@ -66,7 +67,6 @@ var esaId; //任务id
 var USERID; //用户id
 var USERTOKEN; //用户token
 var EXTENDINFOID; //领取的任务的id
-var IMGLIST = []; //提交审核时的图片数组
 export default {
 	data() {
 		return {
@@ -76,12 +76,14 @@ export default {
 			btnArray: '',
 			btnIndex: 0, //0,任务达到上限，1，领取任务，2提交审核，3审核中，4，完成任务
 			checkValue: true, //显示上传图片
+			showAdd: true, //显示上传加号
 			flag: false, //控制轮播显示
 			detailData: [], //详情页数据,
 			upperLimit: 0, //控制任务是否达到上限的背景
 			isLimit: false,
 			upPic: '', //审核图片预览
-			upPicList: '', //审核后的图片
+			upPicList: [], //审核后的图片
+			IMGLIST: [], //提交审核时的图片数组
 			type: '' //遮罩邀请层
 		};
 	},
@@ -278,11 +280,12 @@ export default {
 								title: '上传成功',
 								mask: true
 							});
-							// console.log(uploadFileRes);
+							console.log(uploadFileRes);
+
 							self.upPic = JSON.parse(uploadFileRes.data).imgurl;
 							// 把图片放进数组给提交审核做准备
-							IMGLIST.push(self.upPic);
-							// console.log(self.upPic);
+							self.IMGLIST.push(self.upPic);
+							// console.log(1111111111, self.upPic);
 							// 显示用户上传的图片
 							self.checkValue = false;
 						}
@@ -292,7 +295,7 @@ export default {
 		},
 		// 提交审核
 		submitAudit() {
-			if (IMGLIST.length == 0) {
+			if (self.IMGLIST.length == 0) {
 				plus.nativeUI.toast('请上传需要审核的照片！！！');
 			} else {
 				uni.request({
@@ -303,7 +306,7 @@ export default {
 					},
 					data: {
 						extendId: EXTENDINFOID,
-						imgList: IMGLIST
+						imgList: self.IMGLIST
 					},
 					success: function(res) {
 						console.log(res.data);
@@ -386,8 +389,10 @@ export default {
 						self.showUpload = true;
 						// 显示用户上传的图片
 						self.checkValue = false;
+						// 不显示加号
+						self.showAdd = false;
 						// 显示审核后的图片
-						self.upPicList = self.detailData.imgs[0].image;
+						self.upPicList = self.detailData.imgs;
 					}
 					// 已经待审核，显示审核完成
 					if (self.detailData.status == 2) {
@@ -397,7 +402,8 @@ export default {
 						self.showUpload = false;
 						// 显示用户上传的图片
 						self.checkValue = true;
-
+						// 不显示加号
+						self.showAdd = false;
 						//重置按钮为领取任务
 						self.detailData.status == -1;
 						// 改变按钮里面的内容,根据后台返回显示的应该是是未领取任务
@@ -424,7 +430,7 @@ export default {
 				method: 'GET',
 				success: function(res) {
 					self.detailData = res.data.data;
-					// console.log(self.detailData);
+					console.log(self.detailData);
 					// console.log(self.detailData.esaUsedCount);
 					//进入页面，初始化，处理领取任务按钮
 
@@ -562,17 +568,25 @@ page {
 			margin-bottom: 100upx;
 		}
 	}
+	.suggest {
+		background: #fff;
+		border-top: 1px solid #e7e7e7;
+		margin-bottom: 100upx;
+	}
 	.upload_box {
 		position: relative;
-		width: 220upx;
-		height: 220upx;
+		width: 750upx;
 		background: rgba(255, 255, 255, 1);
-		margin: 20upx 10upx;
-		margin-bottom: 100upx;
+		margin: 20upx 20upx;
+		margin-bottom: 250upx;
 		display: flex;
-		justify-content: center;
-		align-items: center;
+		// justify-content: center;
+		// align-items: center;
+		flex-wrap: wrap;
 		.upload {
+			width: 220upx;
+			height: 220upx;
+			margin: 10upx;
 			font-size: 100upx;
 			font-family: PingFang SC;
 			font-weight: bold;
@@ -581,13 +595,7 @@ page {
 		image {
 			width: 220upx;
 			height: 220upx;
-		}
-		.img2 {
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 220upx;
-			height: 220upx;
+			margin: 10upx;
 		}
 	}
 	.tuwen_detail_get {
