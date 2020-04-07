@@ -17,6 +17,7 @@ export default {
 			// console.log(555555555555555555555555555555555, result);
 			// console.log('getInstall : channel=' + result.channelCode + ', data=' + result.bindData);
 		});
+		openinstall.reportRegister();
 		// openinstall.registerWakeUp(function(result) {
 		// 	uni.setStorage({
 		// 		key: 'registerWakeUpInfo',
